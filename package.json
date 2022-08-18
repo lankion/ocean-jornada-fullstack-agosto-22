@@ -1,0 +1,7 @@
+{
+    "name": "ocean-jornada-fullstack-agosto",
+    "version": "1.0.0",
+    "scripts":{
+        "postinstall": "npm install --prefix backend"
+    }
+}
