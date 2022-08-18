@@ -1,9 +1,9 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
 
-// const url = "mongodb://localhost:27017";
-// // const url = "mongodb+srv://admin:LdQHrR3iAM9u4Mtw@cluster0.ih1f4.mongodb.net";
-// const dbName = "jornada-fullstack-agosto-22";
+//const url = "mongodb://localhost:27017";
+const url = "mongodb+srv://admin:3D50DKToKgIepfFR@cluster0.gosiefa.mongodb.net/";
+const dbName = "jornada-fullstack-agosto-22";
 
 // Declaração da função main()
 async function main() {
@@ -15,13 +15,13 @@ async function main() {
   //  Promises do JavaScript, que permitem aguardar
   //  esse tempo. Para isso, vamos usar o async/await.
 
-  // console.log("Conectando com o banco de dados...");
+  console.log("Conectando com o banco de dados...");
 
-  // const client = await MongoClient.connect(url);
-  // const db = client.db(dbName);
-  // const collection = db.collection("pontuacoes");
+  const client = await MongoClient.connect(url);
+  const db = client.db(dbName);
+  const collection = db.collection("pontuacoes");
 
-  // console.log("Banco de dados conectado com sucesso!");
+  console.log("Banco de dados conectado com sucesso!");
 
   const app = express();
 
