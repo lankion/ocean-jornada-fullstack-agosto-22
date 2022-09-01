@@ -3,9 +3,9 @@ import nuvens from "../../assets/clouds.png";
 import cano from "../../assets/pipe.png";
 import mario from "../../assets/mario.gif";
 import gameOver from "../../assets/game-over.png";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-function Jogo() {
+function Jogo(props) {
   /*
   const estaPulando = useState(false);
   const estado = estaPulando[0];
@@ -23,7 +23,10 @@ function Jogo() {
   // No momento que um estado é atualizado, o componente atualiza
   // tudo o que está sendo renderizado
   const [estaPulando, setEstaPulando] = useState(false);
+
   const [estaMorto, setEstaMorto] = useState(false);
+
+  const [pontos, setPontos] = useState(0);
 
   // Criamos as referências para `mario` e `cano`
   const marioRef = useRef();
@@ -50,28 +53,56 @@ function Jogo() {
     );
   }
 
-  // Implementação temporária para exibir se o mário está no cano
-  // ou não
-  setInterval(function () {
-    // Pegamos o valor que determinar se o Mario
-    // está no cano ou não
-    const estaNoCano = marioEstaNoCano();
+  useEffect(
+    // Effect
+    function () {
+      // Implementação temporária para exibir se o mário
+      // está no cano ou não
+      const interval = setInterval(function () {
+        // Pegamos o valor que determinar se o Mario
+        // está no cano ou não
+        const estaNoCano = marioEstaNoCano();
 
-    // Se o Mario não estiver no cano, encerramos a função com `return`
-    if (!estaNoCano) {
-      return;
-    }
+        // Se o Mario não estiver no cano, encerramos a função com `return`
+        if (!estaNoCano || estaMorto) {
+          return;
+        }
 
-    // Caso esteja no cano, atualizamos o estado
-    // `estaMorto` para `true`
-    setEstaMorto(true);
-  }, 100);
+        // Caso esteja no cano, atualizamos o estado
+        // `estaMorto` para `true`
+        setEstaMorto(true);
+
+        props.onMorrer();
+      }, 100);
+
+      // (Opcional) Return mecanismo que desfaz o Effect anterior
+      return () => clearInterval(interval);
+    },
+    // Lista de dependências
+    [estaMorto, props]
+  );
+
+  // UseEffect
+  useEffect(
+    function () {
+      // Salvar a pontuação
+      const interval = setInterval(function () {
+        if (estaMorto) {
+          return;
+        }
+
+        setPontos(pontos + 1);
+        props.onPontos(pontos + 1);
+      }, 500);
+
+      return () => clearInterval(interval);
+    },
+    [estaMorto, pontos]
+  );
 
   /*
-  Quando estiver morto:
-  - Mudar a imagem do Mario
-  - Pausar animações
-  - Salvar a pontuação
+  - Exibir pontos em tempo real (DESAFIO)
+  - Quando der GameOver, exibir o HighScore
   */
 
   document.onkeydown = function () {
@@ -94,6 +125,9 @@ function Jogo() {
     marioClassName = "mario mario-pulo";
   }
 
+  // Outra forma de simplificar, usando ternário
+  // const marioClassName = "mario " + (estaPulando ? "mario-pulo" : "");
+
   // No lugar de declarar uma variável e mudar o valor dela em um caso de `if`,
   // como fizemos com o className do Mario, podemos criar uma variável
   // com dois valores, um para caso a condição seja verdadeira, outro para
@@ -101,11 +135,20 @@ function Jogo() {
   // Esse é o Operador Ternário!
   const marioImage = estaMorto ? gameOver : mario;
 
+  const pararAnimacao = estaMorto ? "parar-animacao" : "";
+
   return (
     <div className="jogo">
+      <div>Pontos: {pontos}</div>
+
       <img className="nuvens" src={nuvens} alt="Nuvens" />
 
-      <img ref={canoRef} className="cano" src={cano} alt="Cano" />
+      <img
+        ref={canoRef}
+        className={"cano " + pararAnimacao}
+        src={cano}
+        alt="Cano"
+      />
 
       <img
         ref={marioRef}
