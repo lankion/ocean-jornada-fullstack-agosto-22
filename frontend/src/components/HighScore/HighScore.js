@@ -10,7 +10,13 @@ de scores
 */
 
 function HighScore(props) {
-  return (
+  
+  //Fazer uma solicitação para o bbackend trazer as maiores pontuações
+  //Endpoint: [GET] http://localhost:3333/pontuacoes
+  //Solicitação = Requisição HTTP
+  //Bibliotecas: Fetch, axios
+  fetch("http://localhost:3333/pontuacoes").then(console.log);
+    return (
     <div className="HighScore">
       <div>
         Você fez <b>{props.pontos}</b> pontos!
